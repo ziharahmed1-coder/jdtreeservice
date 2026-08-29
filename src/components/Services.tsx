@@ -117,7 +117,7 @@ export function Services() {
       <div className="px-6 py-28 md:px-14">
         <p className="eyebrow text-sun/80">04 / What we do</p>
         <h2 className="display mt-6 max-w-[14ch] text-[clamp(2.5rem,7vw,6rem)] text-cream">
-          Five services. One standard.
+          Every service, one standard.
         </h2>
       </div>
       {PANELS.map((p, i) => (
