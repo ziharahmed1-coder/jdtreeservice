@@ -2,7 +2,6 @@ import { useRef } from "react";
 import { motion, useScroll } from "motion/react";
 
 import { interp, useScrollStyles } from "@/hooks/use-scroll-styles";
-import canopyVideo from "@/assets/jd-canopy.mp4.asset.json";
 import poster from "@/assets/canopy-poster.jpg";
 
 const HOTSPOTS = [
@@ -35,6 +34,8 @@ const HOTSPOTS = [
     pos: "left-[70%] top-[78%]",
   },
 ];
+
+const VIDEO_URL = "/videos/jd-canopy.mp4";
 
 export function Hero() {
   const ref = useRef<HTMLDivElement>(null);
@@ -87,7 +88,7 @@ export function Hero() {
         <video
           ref={videoRef}
           className="absolute inset-0 h-full w-full object-cover"
-          src={canopyVideo.url}
+          src={VIDEO_URL}
           poster={poster}
           autoPlay
           muted
