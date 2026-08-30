@@ -1,20 +1,31 @@
 import { useRef } from "react";
-import { motion, useScroll, useTransform } from "motion/react";
+import { useScroll } from "motion/react";
 
+import { interp, useScrollStyles } from "@/hooks/use-scroll-styles";
 import canopyVideo from "@/assets/jd-canopy.mp4.asset.json";
 import poster from "@/assets/canopy-poster.jpg";
 
 export function CinematicCTA() {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
-  const opacity = useTransform(scrollYProgress, [0, 0.45, 1], [0, 0.45, 0.15]);
-  const scale = useTransform(scrollYProgress, [0, 1], [1.2, 1]);
+
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useScrollStyles(scrollYProgress, [
+    {
+      ref: videoRef,
+      apply: (el, p) => {
+        el.style.opacity = String(interp(p, [0, 0.45, 1], [0, 0.45, 0.15]));
+        el.style.transform = `scale(${interp(p, [0, 1], [1.2, 1])})`;
+      },
+    },
+  ]);
 
   return (
     <section ref={ref} className="relative h-screen overflow-hidden bg-black grain">
-      <motion.video
+      <video
+        ref={videoRef}
         className="absolute inset-0 h-full w-full object-cover"
-        style={{ opacity, scale }}
         src={canopyVideo.url}
         poster={poster}
         autoPlay
