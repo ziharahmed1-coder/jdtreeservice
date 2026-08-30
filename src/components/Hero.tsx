@@ -88,7 +88,7 @@ export function Hero() {
           ref={videoRef}
           className="absolute inset-0 h-full w-full object-cover"
           src={canopyVideo.url}
-          poster={poster.src ?? poster}
+          poster={poster}
           autoPlay
           muted
           playsInline
