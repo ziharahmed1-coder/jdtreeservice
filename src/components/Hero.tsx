@@ -1,6 +1,7 @@
 import { useRef } from "react";
-import { motion, useScroll, useTransform } from "motion/react";
+import { motion, useScroll } from "motion/react";
 
+import { interp, useScrollStyles } from "@/hooks/use-scroll-styles";
 import canopyVideo from "@/assets/jd-canopy.mp4.asset.json";
 import poster from "@/assets/canopy-poster.jpg";
 
@@ -39,24 +40,53 @@ export function Hero() {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
 
-  const videoScale = useTransform(scrollYProgress, [0, 1], [1.08, 1.24]);
-  const videoY = useTransform(scrollYProgress, [0, 1], ["0%", "-6%"]);
-  const veil = useTransform(scrollYProgress, [0, 0.5, 1], [0.25, 0.5, 0.72]);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const veilRef = useRef<HTMLDivElement>(null);
+  const heroRef = useRef<HTMLDivElement>(null);
+  const sceneRef = useRef<HTMLDivElement>(null);
+  const spotsRef = useRef<HTMLDivElement>(null);
 
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.18, 0.3], [1, 1, 0]);
-  const heroY = useTransform(scrollYProgress, [0, 0.3], ["0px", "-70px"]);
-
-  const sceneOpacity = useTransform(scrollYProgress, [0.32, 0.42, 0.58, 0.66], [0, 1, 1, 0]);
-  const sceneY = useTransform(scrollYProgress, [0.32, 0.66], ["60px", "-60px"]);
-
-  const spotOpacity = useTransform(scrollYProgress, [0.68, 0.78], [0, 1]);
+  useScrollStyles(scrollYProgress, [
+    {
+      ref: videoRef,
+      apply: (el, p) => {
+        el.style.transform = `translateY(${interp(p, [0, 1], [0, -6])}%) scale(${interp(p, [0, 1], [1.08, 1.24])})`;
+      },
+    },
+    {
+      ref: veilRef,
+      apply: (el, p) => {
+        el.style.opacity = String(interp(p, [0, 0.5, 1], [0.25, 0.5, 0.72]));
+      },
+    },
+    {
+      ref: heroRef,
+      apply: (el, p) => {
+        el.style.opacity = String(interp(p, [0, 0.18, 0.3], [1, 1, 0]));
+        el.style.transform = `translateY(${interp(p, [0, 0.3], [0, -70])}px)`;
+      },
+    },
+    {
+      ref: sceneRef,
+      apply: (el, p) => {
+        el.style.opacity = String(interp(p, [0.32, 0.42, 0.58, 0.66], [0, 1, 1, 0]));
+        el.style.transform = `translateY(${interp(p, [0.32, 0.66], [60, -60])}px)`;
+      },
+    },
+    {
+      ref: spotsRef,
+      apply: (el, p) => {
+        el.style.opacity = String(interp(p, [0.68, 0.78], [0, 1]));
+      },
+    },
+  ]);
 
   return (
     <section ref={ref} id="top" className="relative h-[280vh]">
       <div className="sticky top-0 h-screen w-full overflow-hidden bg-black grain">
-        <motion.video
+        <video
+          ref={videoRef}
           className="absolute inset-0 h-full w-full object-cover"
-          style={{ scale: videoScale, y: videoY }}
           src={canopyVideo.url}
           poster={poster}
           autoPlay
@@ -64,13 +94,13 @@ export function Hero() {
           playsInline
           preload="auto"
         />
-        <motion.div className="absolute inset-0 bg-black" style={{ opacity: veil }} />
+        <div ref={veilRef} className="absolute inset-0 bg-black" />
         <div className="absolute inset-0 bg-gradient-to-r from-background via-background/40 to-transparent" />
         <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-background to-transparent" />
 
         {/* 01 — HERO */}
-        <motion.div
-          style={{ opacity: heroOpacity, y: heroY }}
+        <div
+          ref={heroRef}
           className="absolute inset-0 flex flex-col justify-end px-6 pb-20 md:justify-center md:px-14 md:pb-0"
         >
           <div className="max-w-[46rem]">
@@ -136,11 +166,11 @@ export function Hero() {
               </a>
             </motion.div>
           </div>
-        </motion.div>
+        </div>
 
         {/* 02 — LOOK CLOSER */}
-        <motion.div
-          style={{ opacity: sceneOpacity, y: sceneY }}
+        <div
+          ref={sceneRef}
           className="absolute inset-0 flex flex-col justify-center px-6 md:px-14"
         >
           <p className="eyebrow text-sun/80">01 / Understanding the canopy</p>
@@ -151,10 +181,10 @@ export function Hero() {
             Healthy trees don't happen by accident. They need attention, knowledge, and the
             right care at the right time.
           </p>
-        </motion.div>
+        </div>
 
         {/* 03 — THE TREE AS INTERFACE */}
-        <motion.div style={{ opacity: spotOpacity }} className="absolute inset-0">
+        <div ref={spotsRef} className="absolute inset-0">
           <p className="eyebrow absolute left-6 top-1/2 -translate-y-1/2 text-cream/50 md:left-14">
             02 / The canopy, annotated
           </p>
@@ -174,7 +204,7 @@ export function Hero() {
               </div>
             </div>
           ))}
-        </motion.div>
+        </div>
 
         <div className="eyebrow absolute bottom-6 right-6 text-cream/35 md:right-14">
           Scroll
