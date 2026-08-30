@@ -7,16 +7,20 @@ import type { MotionValue } from "motion/react";
  * inside sticky containers (causing ghost/overlapping text).
  */
 export function interp(p: number, input: number[], output: number[]): number {
-  if (p <= input[0]) return output[0];
+  const firstIn = input[0]!;
+  if (p <= firstIn) return output[0]!;
   const last = input.length - 1;
-  if (p >= input[last]) return output[last];
+  const lastIn = input[last]!;
+  if (p >= lastIn) return output[last]!;
   for (let i = 1; i < input.length; i++) {
-    if (p <= input[i]) {
-      const t = (p - input[i - 1]) / (input[i] - input[i - 1]);
-      return output[i - 1] + (output[i] - output[i - 1]) * t;
+    const hi = input[i]!;
+    if (p <= hi) {
+      const lo = input[i - 1]!;
+      const t = (p - lo) / (hi - lo);
+      return output[i - 1]! + (output[i]! - output[i - 1]!) * t;
     }
   }
-  return output[last];
+  return output[last]!;
 }
 
 type Binding = {
