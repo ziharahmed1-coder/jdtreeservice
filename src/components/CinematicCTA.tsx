@@ -2,9 +2,8 @@ import { useRef } from "react";
 import { useScroll } from "motion/react";
 
 import { interp, useScrollStyles } from "@/hooks/use-scroll-styles";
+import canopyVideo from "@/assets/jd-canopy.mp4.asset.json";
 import poster from "@/assets/canopy-poster.jpg";
-
-const VIDEO_URL = "/videos/jd-canopy.mp4";
 
 export function CinematicCTA() {
   const ref = useRef<HTMLDivElement>(null);
@@ -27,7 +26,7 @@ export function CinematicCTA() {
       <video
         ref={videoRef}
         className="absolute inset-0 h-full w-full object-cover"
-        src={VIDEO_URL}
+        src={canopyVideo.url}
         poster={poster}
         autoPlay
         muted
